@@ -26,6 +26,10 @@ router.post(
 			isAdmin: request.body.isAdmin,
 		});
 
+		if (await User.findOne({ email: request.body.email })) {
+			response.status(403).json({ email: "Email already in use" });
+		}
+
 		const salt = bcrypt.genSaltSync(BCRYPT_ITERS);
 		const hash = bcrypt.hashSync(user.password, salt);
 
