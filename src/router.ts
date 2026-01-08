@@ -1,5 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { User } from "./models/User";
 
 const BCRYPT_ITERS = 10;
@@ -42,5 +43,26 @@ router.post(
 			: response.status(400).json({ success: false });
 	},
 );
+
+router.post("/api/user/login", async (request: Request, response: Response) => {
+	const user = await User.findOne({ email: request.body.email });
+
+	if (!user) {
+		return response.status(404).json({ error: "user not found" });
+	}
+
+	if (!bcrypt.compareSync(request.body.password, user.password)) {
+		return response.status(403).json({ error: "incorrect password" });
+	}
+
+	const payload = {
+		username: user.username,
+		isAdmin: user.isAdmin,
+	};
+
+	const token = jwt.sign(payload, SECRET);
+
+	return response.status(200).json({ token: token });
+});
 
 export default router;
