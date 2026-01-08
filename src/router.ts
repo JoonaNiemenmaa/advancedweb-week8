@@ -45,6 +45,11 @@ router.post(
 );
 
 router.post("/api/user/login", async (request: Request, response: Response) => {
+	console.log("------------------------------------------");
+	console.log("--------------REQUEST---------------------");
+	console.log("------------------------------------------");
+	console.log(request.body);
+
 	const user = await User.findOne({ email: request.body.email });
 
 	if (!user) {
