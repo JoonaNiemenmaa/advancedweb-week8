@@ -2,6 +2,8 @@ import express, { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "./models/User";
+import { validate_register } from "./validators/validator";
+import { body, validationResult } from "express-validator";
 
 const BCRYPT_ITERS = 10;
 const SECRET: string | undefined = process.env.SECRET;
@@ -19,7 +21,23 @@ router.use(express.json());
 
 router.post(
 	"/api/user/register/",
+	body("username").trim().escape().notEmpty().isLength({ min: 3, max: 25 }),
+	body("email").trim().escape().notEmpty().isEmail(),
+	body("password").escape().notEmpty().isStrongPassword({
+		minLength: 8,
+		minLowercase: 1,
+		minUppercase: 1,
+		minNumbers: 1,
+		minSymbols: 1,
+	}),
+	body("isAdmin").notEmpty(),
 	async (request: Request, response: Response) => {
+		const result = validationResult(request);
+
+		if (!result.isEmpty()) {
+			return response.status(400).json({ error: result.array() });
+		}
+
 		const user = new User({
 			username: request.body.username,
 			email: request.body.email,
@@ -45,12 +63,7 @@ router.post(
 );
 
 router.post("/api/user/login", async (request: Request, response: Response) => {
-	console.log("------------------------------------------");
-	console.log("--------------REQUEST---------------------");
-	console.log("------------------------------------------");
-	console.log(request.body);
-
-	const user = await User.findOne({ email: request.body.email });
+	const user = await User.findOne({ email: request.body.email.trim() });
 
 	if (!user) {
 		return response.status(404).json({ error: "user not found" });
