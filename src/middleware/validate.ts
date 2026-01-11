@@ -28,11 +28,11 @@ export const validate = function (options: IOptions = { isAdmin: false }) {
 
 			payload = jwt.verify(token, SECRET) as IPayload;
 		} catch (error) {
-			return response.status(403).json({ message: "Access denied" });
+			return response.status(403).json({ message: "Access denied." });
 		}
 
 		if (options.isAdmin && !payload.isAdmin) {
-			return response.status(403).json({ message: "Access denied" });
+			return response.status(403).json({ message: "Access denied." });
 		}
 
 		if (!request.body) {
