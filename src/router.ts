@@ -1,19 +1,17 @@
 import express, { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "./models/User";
-import { validate_register } from "./validators/validator";
 import { body, validationResult } from "express-validator";
+import { Types } from "mongoose";
+
+import { SECRET } from "./server";
+
+import { User } from "./models/User";
+import { Topic } from "./models/Topic";
+
+import { validate } from "./middleware/validate";
 
 const BCRYPT_ITERS = 10;
-const SECRET: string | undefined = process.env.SECRET;
-
-console.log(`SECRET: ${SECRET}`);
-
-if (!SECRET) {
-	console.error("No SECRET environment variable provided!");
-	process.exit(1);
-}
 
 const router = Router();
 
@@ -82,5 +80,47 @@ router.post("/api/user/login", async (request: Request, response: Response) => {
 
 	return response.status(200).json({ token: token });
 });
+
+router.get("/api/topics", async (request: Request, response: Response) => {
+	return response.status(200).json(await Topic.find());
+});
+
+router.post(
+	"/api/topic",
+	validate(),
+	async (request: Request, response: Response) => {
+		const post = new Topic({
+			title: request.body.title,
+			content: request.body.content,
+			username: request.body.payload.username,
+			createdAt: Date.now(),
+		});
+
+		await post.save().catch((error) => {
+			console.log(error);
+			return response.status(400).json({ message: "failure" });
+		});
+
+		return response.status(200).json(post);
+	},
+);
+
+router.delete(
+	"/api/topic/:id",
+	validate({ isAdmin: true }),
+	async (request: Request, response: Response) => {
+		const id = request.params.id;
+
+		console.log(id);
+
+		try {
+			await Topic.deleteOne({ _id: new Types.ObjectId(id) });
+			return response.status(200).json({ message: "success" });
+		} catch (error) {
+			console.error(error);
+			return response.status(400).json({ message: "failure" });
+		}
+	},
+);
 
 export default router;
