@@ -115,7 +115,9 @@ router.delete(
 
 		try {
 			await Topic.deleteOne({ _id: new Types.ObjectId(id) });
-			return response.status(200).json({ message: "success" });
+			return response
+				.status(200)
+				.json({ message: "Topic deleted successfully." });
 		} catch (error) {
 			console.error(error);
 			return response.status(400).json({ message: "failure" });

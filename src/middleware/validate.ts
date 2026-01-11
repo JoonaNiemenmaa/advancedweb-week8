@@ -11,6 +11,8 @@ interface IOptions {
 	isAdmin: boolean;
 }
 
+const BEARER_LENGTH = 7;
+
 export const validate = function (options: IOptions = { isAdmin: false }) {
 	return (request: Request, response: Response, next: NextFunction) => {
 		if (!request.headers.authorization) {
@@ -20,10 +22,11 @@ export const validate = function (options: IOptions = { isAdmin: false }) {
 		let payload: IPayload | undefined;
 
 		try {
-			payload = jwt.verify(
-				request.headers.authorization,
-				SECRET,
-			) as IPayload;
+			const token = (request.headers.authorization as string).substring(
+				BEARER_LENGTH,
+			);
+
+			payload = jwt.verify(token, SECRET) as IPayload;
 		} catch (error) {
 			return response.status(403).json({ message: "Access denied" });
 		}
