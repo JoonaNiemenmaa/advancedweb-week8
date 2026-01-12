@@ -34,7 +34,7 @@ function setupRegisterForm() {
 		console.log(await response.json());
 
 		if (response.status === 200) {
-			window.location.replace("./index.html");
+			window.location.replace("./");
 		}
 	});
 }
