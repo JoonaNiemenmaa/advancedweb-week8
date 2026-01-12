@@ -22,7 +22,6 @@ function display_topics(topics) {
 		username.innerText = `${topic.username} ${topic.createdAt}`;
 
 		const delete_button = document.createElement("button");
-		delete_button.id = "deleteTopic";
 		delete_button.innerText = "Delete";
 
 		delete_button.addEventListener("click", async (event) => {
@@ -48,6 +47,8 @@ function display_topics(topics) {
 		div.appendChild(content);
 		div.appendChild(username);
 		div.appendChild(delete_button);
+
+		delete_button.id = "deleteTopic";
 
 		topics_div.appendChild(div);
 	}
