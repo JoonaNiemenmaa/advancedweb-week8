@@ -10,22 +10,31 @@
 	<body>
 		<nav>
 			<div class="nav-wrapper">
-				<form id="loginForm" class="right">
-					<div class="row">
-						<div class="input-field white col s4">
-							<label for="email">Email</label>
-							<input id="email" type="email" class="validate"></input>
-						</div>
+				<ul class="right">
+					<li>
+						<form id="loginForm" class="row">
+							<div class="input-field col">
+								<label for="email">Email</label>
+								<input id="email" type="email" class="navbar-input validate"></input>
+							</div>
 
-						<div class="input-field white col s4">
-							<label for="password">password</label>
-							<input id="password" type="password" class="validate"></input>
-						</div>
+							<div class="input-field col">
+								<label for="password">password</label>
+								<input id="password" type="password" class="navbar-input validate"></input>
+							</div>
 
-						<button id="login" class="waves-effect waves-light btn col s2">Login</button>
-						<a href="register.html" class="waves-effect waves-light btn col s2">Register</a>
-					</div>
-				</form>
+							<div class="col">
+								<button id="login" class="waves-effect waves-light btn">Login</button>
+							</div>
+
+							<div class="col">
+								<a href="register.html" class="waves-effect waves-light btn">Register</a>
+							</div>
+						</form>
+
+
+					</li>
+				</ul>
 			</div>
 		</nav>
 
@@ -36,9 +45,9 @@
 				<input id="topicTitle" type="text"></input>
 
 				<label for="topicText">Content</label>
-				<textarea id="topicText" rows="5" cols="33"></textarea>
+				<textarea id="topicText" class="materialize-textarea"></textarea>
 
-				<button id="postTopic" type="button" class="waves-effect waves-light btn col s2">Submit</button>
+				<button id="postTopic" type="button" class="waves-effect waves-light btn">Submit</button>
 			</div>
 
 			<div id="topics">

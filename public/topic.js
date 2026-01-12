@@ -11,18 +11,35 @@ function display_topics(topics) {
 
 	for (const topic of topics) {
 		const div = document.createElement("div");
+		div.classList.add(
+			"card",
+			"z-depth-2",
+			"hoverable",
+			"grey",
+			"lighten-2",
+		);
+
+		const card_content = document.createElement("div");
+		card_content.classList.add("card-content");
+
+		const card_action = document.createElement("div");
+		card_action.classList.add("card-action");
 
 		const title = document.createElement("span");
 		title.innerText = topic.title;
+		title.classList.add("card-title");
 
 		const content = document.createElement("p");
 		content.innerText = topic.content;
 
 		const username = document.createElement("p");
-		username.innerText = `${topic.username} ${topic.createdAt}`;
+		username.innerText = `Posted by ${topic.username} at ${topic.createdAt}`;
+		username.classList.add("grey-text", "text-darken-2");
 
 		const delete_button = document.createElement("button");
 		delete_button.innerText = "Delete";
+
+		delete_button.classList.add("btn", "waves-effect", "waves-light");
 
 		delete_button.addEventListener("click", async (event) => {
 			const url = `http://localhost:3000/api/topic/${topic._id}`;
@@ -43,14 +60,18 @@ function display_topics(topics) {
 			}
 		});
 
-		div.appendChild(title);
-		div.appendChild(content);
-		div.appendChild(username);
-		div.appendChild(delete_button);
+		div.appendChild(card_content);
+		div.appendChild(card_action);
 
-		delete_button.id = "deleteTopic";
+		card_content.appendChild(title);
+		card_content.appendChild(content);
+		card_content.appendChild(username);
+
+		card_action.appendChild(delete_button);
 
 		topics_div.appendChild(div);
+
+		delete_button.id = "deleteTopic";
 	}
 }
 
